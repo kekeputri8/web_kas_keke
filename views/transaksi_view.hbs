@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Node.js and Mysql</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+</head>
+<body>z
+    <div class="container">
+        <h2>Total Saldo: {{ totalSaldo }}</h2>
+        <h2>Transaksi List</h2>
+        <button class="btn btn-success" data-toggle="modal" data-target="#myModalAdd" id="btnAdd">Add New</button>
+        <table class="table table-striped" id="mytable">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Tanggal</th>
+                    <th>No Bukti</th>
+                    <th>Tujuan</th>
+                    <th>No Akun</th>
+                    <th>Jumlah</th>
+                    <th>Tipe</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each results}}
+                <tr>
+                    <td>{{ id_trans }}</td>
+                    <td>{{ tgl }}</td>
+                    <td>{{ no_bukti }}</td>
+                    <td>{{ tujuan }}</td>
+                    <td>{{ no_akun }}</td>
+                    <td>{{ jumlah }}</td>
+                    <td>{{ tipe }}</td>
+                    <td>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-info edit"
+                            data-id="{{ id_trans }}"
+                            data-tgl="{{ tgl }}"
+                            data-no-bukti="{{ no_bukti }}"
+                            data-tujuan="{{ tujuan }}"
+                            data-no-akun="{{ no_akun }}"
+                            data-jumlah="{{ jumlah }}"
+                            data-tipe="{{ tipe }}">Edit</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger delete"
+                            data-id="{{ id_trans }}">Delete</a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+<!-- Modal Add Transaksi -->
+<form action="/save" method="POST">
+    <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Transaction</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="no_bukti">No. Bukti</label>
+                        <input type="text" name="no_bukti" class="form-control" id="no_bukti" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="tgl">Tanggal</label>
+                        <input type="text" name="tgl" class="form-control" id="tgl" placeholder="dd/mm/yyyy" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="untuk_keperluan">Untuk Keperluan</label>
+                        <select name="untuk_keperluan" class="form-control" id="untuk_keperluan" required>
+                            {{#each tbl_akun}}
+                            <option value="{{ no_akun }}">{{ no_akun }} - {{ nm_akun }}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="diterima_dari">Diterima dari</label>
+                        <input type="text" name="diterima_dari" class="form-control" id="diterima_dari" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="uang_sejumlah">Uang sejumlah</label>
+                        <input type="text" name="uang_sejumlah" class="form-control" id="uang_sejumlah" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+    <!-- Modal Update Transaksi-->
+    <form action="/update" method="POST">
+        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Transaction</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" name="tgl" class="form-control tgl"
+                            placeholder="Tanggal" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="no_bukti" class="form-control no_bukti"
+                            placeholder="No Bukti" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="tujuan" class="form-control tujuan"
+                            placeholder="Tujuan" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="no_akun" class="form-control no_akun"
+                            placeholder="No Akun" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="jumlah" class="form-control jumlah"
+                            placeholder="Jumlah" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="tipe" class="form-control tipe"
+                            placeholder="Tipe" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <input type="hidden" name="id_trans" class="id_trans">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+    <!-- Modal Delete Transaksi-->
+    <form id="delete-row-form" action="/delete" method="POST">
+        <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Delete Transaction</h5><button type="button"
+                        class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <strong>Anda yakin mau menghapus data ini?</strong></div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="id_trans"
+                        class="form-control id_trans2" required>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="/assets/js/jquery-3.6.4.js"></script>
+    <script src="/assets/js/bootstrap.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Menambahkan data ke modal
+            $('#btnAdd').click(function() {
+                $('#myModalAdd').modal('show');
+            });
+
+            // Menampilkan data ke modal untuk edit
+            $('#mytable').on('click','.edit',function(){
+                var id_trans = $(this).data('id');
+                var tgl = $(this).data('tgl');
+                var no_bukti = $(this).data('no-bukti');
+                var tujuan = $(this).data('tujuan');
+                var no_akun = $(this).data('no-akun');
+                var jumlah = $(this).data('jumlah');
+                var tipe = $(this).data('tipe');
+                $('#EditModal').modal('show');
+                $('.tgl').val(tgl);
+                $('.no_bukti').val(no_bukti);
+                $('.tujuan').val(tujuan);
+                $('.no_akun').val(no_akun);
+                $('.jumlah').val(jumlah);
+                $('.tipe').val(tipe);
+                $('.id_trans').val(id_trans);
+            });
+
+            // Menampilkan modal untuk hapus record
+            $('#mytable').on('click','.delete',function(){
+                var id_trans = $(this).data('id');
+                $('#DeleteModal').modal('show');
+                $('.id_trans2').val(id_trans);
+            });
+        });
+    </script>
+</body>
+
+</html>

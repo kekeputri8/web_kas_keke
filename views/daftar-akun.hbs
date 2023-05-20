@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kas Masuk Kas Keluar - Daftar Akun</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+  <script src="/assets/js/jquery-3.6.4.js"></script>
+  <script src="/assets/js/bootstrap.js"></script>
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="/">Dashboard</a>
+            <a class="nav-link" href="/daftar-akun">Daftar Akun</a>
+            <a class="nav-link" href="/kas-masuk">Kas Masuk</a>
+            <a class="nav-link" href="/kas-keluar">Kas Keluar</a>
+            <a class="nav-link" href="/laporan">Laporan</a>
+            <a class="nav-link" href="/akun">Akun</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="col-md-12">
+      <!-- Content -->
+      <br/>
+      <h1>Daftar Akun</h1>
+      <br/>
+
+     <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+            Tambah Akun
+          </button>
+
+          <br/><br/>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">No Akun</th>
+                <th scope="col">Nama Akun</th>
+                <th scope="col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each akun}}
+              <tr>
+                <th scope="row">{{@index}}</th>
+                <td>{{no_akun}}</td>
+                <td>{{nm_akun}}</td>
+                <td>
+                  <!-- Button trigger edit modal -->
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{id_akun}}">
+                    Edit
+                  </button>
+
+                  <!-- Button trigger delete modal -->
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{id_akun}}">
+                    Hapus
+                  </button>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+              </div>
+            </div>
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addModalLabel">Tambah Akun</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/addAkun" method="POST">
+            <div class="mb-3">
+              <label for="addNoAkun" class="form-label">No Akun</label>
+              <input type="text" class="form-control" id="addNoAkun" name="no_akun">
+            </div>
+            <div class="mb-3">
+              <label for="addNmAkun" class="form-label">Nama Akun</label>
+              <input type="text" class="form-control" id="addNmAkun" name="nm_akun">
+            </div>
+            <button type="submit" class="btn btn-primary">Tambah</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Edit Modals --}}
+  {{#each akun}}
+  <div class="modal fade" id="editModal{{id_akun}}" tabindex="-1" aria-labelledby="editModalLabel{{id_akun}}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel{{id_akun}}">Edit Akun</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/editAkun" method="POST">
+            <div class="mb-3">
+              <label for="editNoAkun{{id_akun}}" class="form-label">No Akun</label>
+              <input type="text" class="form-control" id="editNoAkun{{id_akun}}" name="no_akun" value="{{no_akun}}">
+            </div>
+            <div class="mb-3">
+              <label for="editNmAkun{{id_akun}}" class="form-label">Nama Akun</label>
+              <input type="text" class="form-control" id="editNmAkun{{id_akun}}" name="nm_akun" value="{{nm_akun}}">
+            </div>
+            <input type="hidden" name="id_akun" value="{{id_akun}}">
+            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+
+  {{!-- Delete Modals --}}
+  {{#each akun}}
+  <div class="modal fade" id="deleteModal{{id_akun}}" tabindex="-1" aria-labelledby="deleteModalLabel{{id_akun}}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel{{id_akun}}">Hapus Akun</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin menghapus akun ini?</p>
+          <form action="/deleteAkun" method="POST">
+            <input type="hidden" name="id_akun" value="{{id_akun}}">
+            <button type="submit" class="btn btn-danger">Hapus</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+
+  <script>
+    $(document).ready(function() {
+      $('#addModal').on('show.bs.modal', function(event) {
+        var modal = $(this);
+        modal.find('.modal-body input[name="no_akun"]').val('');
+        modal.find('.modal-body input[name="nm_akun"]').val('');
+      });
+    });
+  </script>
+</body>
+</html>

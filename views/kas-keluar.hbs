@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kas Masuk Kas Keluar - Dashboard</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="/">Dashboard</a>
+            <a class="nav-link" href="/daftar-akun">Daftar Akun</a>
+            <a class="nav-link" href="/kas-masuk">Kas Masuk</a>
+            <a class="nav-link" href="/kas-keluar">Kas Keluar</a>
+            <a class="nav-link" href="/laporan">Laporan</a>
+            <a class="nav-link" href="/akun">Akun</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid py-3">
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>KAS KELUAR</h6>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addkas">Tambah</button>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-3">
+                <table class="table align-items-center mb-0 table-striped" id="table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Tanggal</th>
+                      <th>No Bukti</th>
+                      <th>Diterima Dari</th>
+                      <th>Dikeluarkan Untuk</th>
+                      <th>Jumlah</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each results}}
+                    <tr>
+                      <td>{{inc @index}}</td>
+                      <td>{{formatDate tgl}}</td>
+                      <td>{{no_bukti}}</td>
+                      <td>{{tujuan}}</td>
+                      <td>{{no_akun}} - {{nm_akun}}</td>
+                      <td>{{formatRupiah jumlah}}</td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editakun"
+                          data-no_bukti="{{no_bukti}}"
+                          data-tgl="{{tgl}}"
+                          data-no_akun="{{no_akun}}"
+                          data-tujuan="{{tujuan}}"
+                          data-jumlah="{{jumlah}}">Edit</button>
+                        <button type="button" class="btn btn-sm btn-danger delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-no_bukti="{{no_bukti}}">Delete</button>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal untuk menambahkan kas keluar -->
+    <div class="modal fade" id="addkas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Tambah Akun</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/addKaskeluar" method="post">
+              <div class="form-group">
+                <table width="100%">
+                  <tr>
+                    <td width="50%">No. Bukti</td>
+                    <td width="50%"><input type="text" name="no_bukti" class="form-control" value="{{buktiNumber}}" readonly></td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> Tanggal </td>
+                    <td width="50%"><input type="date" name="tgl" class="form-control" required></td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> Untuk Keperluan </td>
+                    <td width="50%">
+                      <select name="no_akun" class="form-control">
+                        {{#each options}}
+                        <option value="{{no_akun}}">{{no_akun}} - {{nm_akun}}</option>
+                        {{/each}}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> Diterima Dari </td>
+                    <td width="50%"><input type="text" name="tujuan" class="form-control" placeholder="Jumlah" required></td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> Uang Sejumlah </td>
+                    <td width="50%"><input type="number" name="jumlah" class="form-control" placeholder="Jumlah" required></td>
+                  </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Tambah</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- Modal untuk mengedit kaskeluar -->
+    <div class="modal fade" id="editakun" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Edit Transaksi</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm" action="/editKaskeluar" method="post">
+              <div class="form-group">
+                <table width="100%">
+                  <tr>
+                    <td width="50%">No. Bukti</td>
+                    <td width="50%">
+                      <input type="text" name="no_bukti" id="edit_no_bukti" class="form-control" readonly>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> Tanggal </td>
+                    <td width="50%"><input type="date" name="tgl" id="edit_tgl" class="form-control" required></td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> DIkeluarkan Untuk </td>
+                    <td width="50%">
+                      <select name="no_akun" id="edit_no_akun" class="form-control">
+                        {{#each options}}
+                        <option value="{{no_akun}}">{{no_akun}} - {{nm_akun}}</option>
+                        {{/each}}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> Diterima Dari </td>
+                    <td width="50%"><input type="text" name="tujuan" id="edit_tujuan" class="form-control" placeholder="Jumlah" required></td>
+                  </tr>
+                  <tr>
+                    <td width="50%"> Uang Sejumlah </td>
+                    <td width="50%"><input type="number" name="jumlah" id="edit_jumlah" class="form-control" placeholder="Jumlah" required></td>
+                  </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Delete Transaksi -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Transaction</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="delete-row-form" action="/deleteKaskeluar" method="POST">
+            <div class="modal-body">
+              <strong>Anda yakin mau menghapus data ini?</strong>
+              <input type="hidden" name="no_bukti" class="form-control no_bukti" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  <script src="/assets/js/jquery-3.6.4.js"></script>
+  <script src="/assets/js/bootstrap.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Fungsi untuk menampilkan modal edit transaksi dengan data yang ingin diubah
+      // Mengisi nilai pada modal edit saat tombol Edit ditekan
+      $('#editakun').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var no_bukti = button.data('no_bukti');
+        var tgl = button.data('tgl');
+        var no_akun = button.data('no_akun');
+        var tujuan = button.data('tujuan');
+        var jumlah = button.data('jumlah');
+
+        var modal = $(this);
+        modal.find('#edit_no_bukti').val(no_bukti);
+        modal.find('#edit_tgl').val(tgl);
+        modal.find('#edit_no_akun').val(no_akun);
+        modal.find('#edit_tujuan').val(tujuan);
+        modal.find('#edit_jumlah').val(jumlah);
+      });
+
+      // Menampilkan modal untuk hapus record
+    
+      $('#table').on('click', '.delete', function() {
+      var no_bukti = $(this).data('no_bukti');
+      $('#deleteModal').modal('show');
+      $('.no_bukti').val(no_bukti);
+      });
+
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kas Masuk Kas Keluar - Dashboard</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+  <style>
+    <style>
+    .navbar {
+      margin-bottom: 20px;
+    }
+
+    .navbar-nav {
+      margin: 0 auto;
+      display: table;
+      table-layout: fixed;
+      float: none;
+    }
+
+    .navbar-nav .nav-link {
+      display: inline-block;
+      float: none;
+    }
+
+    .card {
+      margin-bottom: 20px;
+    }
+
+    /* Warna pada judul Dashboard */
+    h1 {
+      color: #337ab7;
+      font-family: Arial, sans-serif;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    /* Warna pada card Saldo Keluar */
+    .card-title.saldo-keluar {
+      color: red;
+      font-size: 18px;
+    }
+
+    /* Warna pada card Saldo Masuk */
+    .card-title.saldo-masuk {
+      color: green;
+      font-size: 18px;
+    }
+
+    /* Warna pada card Total Saldo */
+    .card-title.total-saldo {
+      color: blue;
+      font-size: 18px;
+    }
+  </style>
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" href="/">Dashboard</a>
+          <a class="nav-link" href="/daftar-akun">Daftar Akun</a>
+          <a class="nav-link" href="/kas-masuk">Kas Masuk</a>
+          <a class="nav-link" href="/kas-keluar">Kas Keluar</a>
+          <a class="nav-link" href="/laporan">Laporan</a>
+          <a class="nav-link" href="/akun">Akun</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Content -->
+        <h1 class="text-center">Dashboard</h1>
+        <br>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Saldo Keluar</h5>
+                <p class="card-text">{{ formatRupiah saldoKeluar }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Saldo Masuk</h5>
+                <p class="card-text">{{ formatRupiah saldoMasuk }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Total Saldo</h5>
+                <p class="card-text">{{ formatRupiah totalSaldo }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/js/jquery-3.6.4.js"></script>
+  <script src="/assets/js/bootstrap.js"></script>
+</body>
+</html>
+
